@@ -1,0 +1,50 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  deb:
+    runs-on: ubuntu-latest
+    # Build trên bản Ubuntu cũ nhất cần hỗ trợ để .deb chạy được trên 22.04 trở lên (glibc).
+    container: ubuntu:22.04
+    steps:
+      - name: Cài dependencies
+        run: |
+          apt-get update
+          DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+            ca-certificates curl git build-essential pkg-config dpkg-dev libgtk-3-dev
+
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Cài cargo-deb
+        run: cargo install cargo-deb --locked
+
+      - name: Build .deb
+        run: |
+          cargo deb
+          cp target/debian/*.deb snip_amd64.deb
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: snip-deb
+          path: target/debian/*.deb
+
+      - name: Đăng lên GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: |
+            target/debian/*.deb
+            snip_amd64.deb

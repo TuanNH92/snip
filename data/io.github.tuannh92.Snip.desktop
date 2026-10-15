@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Snip
+Comment=Chụp vùng màn hình (giống Win+Shift+S)
+Exec=snip
+Icon=applets-screenshooter
+Terminal=false
+Categories=Utility;Graphics;
+StartupNotify=false

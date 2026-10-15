@@ -1,0 +1,33 @@
+[package]
+name = "snip"
+version = "0.1.0"
+edition = "2021"
+description = "Snipping tool giống Win+Shift+S cho Ubuntu (GNOME)"
+license = "MIT"
+authors = ["Tuan Nguyen <tuannh131292@gmail.com>"]
+repository = "https://github.com/TuanNH92/snip"
+readme = "README.md"
+
+[dependencies]
+gtk = "0.18"
+
+[profile.release]
+lto = true
+strip = true
+
+[package.metadata.deb]
+maintainer = "Tuan Nguyen <tuannh131292@gmail.com>"
+copyright = "2026, Tuan Nguyen"
+section = "graphics"
+priority = "optional"
+depends = "$auto, gnome-shell | gnome-screenshot"
+extended-description = """\
+Chụp vùng màn hình giống Win+Shift+S trên Windows: chế độ chữ nhật, tự do, \
+toàn màn hình; tự sao chép vào clipboard, lưu vào ~/Pictures/Screenshots và \
+có trình chỉnh sửa nhanh. Hoạt động trên GNOME (Wayland và X11). \
+Phím tắt Super+Shift+S được gán tự động khi mở ứng dụng lần đầu."""
+assets = [
+    ["target/release/snip", "usr/bin/", "755"],
+    ["data/io.github.tuannh92.Snip.desktop", "usr/share/applications/", "644"],
+    ["README.md", "usr/share/doc/snip/README.md", "644"],
+]
